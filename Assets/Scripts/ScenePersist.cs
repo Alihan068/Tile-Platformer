@@ -1,0 +1,30 @@
+using UnityEngine;
+
+public class ScenePersist : MonoBehaviour
+{
+    //Singleton
+    private void Awake() {
+        int numScenePersist = FindObjectsByType<ScenePersist>(FindObjectsSortMode.None).Length;
+
+        if (numScenePersist > 1) {
+            Destroy(gameObject);
+        }
+        else {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+    void Start()
+    {
+        
+    }
+
+
+    void Update()
+    {
+        
+    }
+
+    public void ResetScenePersist() {
+        Destroy(gameObject);
+    }
+}
