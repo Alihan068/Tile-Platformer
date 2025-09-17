@@ -2,20 +2,26 @@ using UnityEngine;
 
 public class CheckPoint : MonoBehaviour {
     Transform checkpointTransform;
-    Vector2 transformValues;
+    Vector3 checkpointTransformValues; //store checkpoint gameobject position
+    Vector3 savedPosOfPlayer; //store position of player
+    PlayerController playerController;
 
     void Start() {
-        transformValues = FindFirstObjectByType<GameSession>().checkpointPos;
+        playerController = FindFirstObjectByType<PlayerController>();
+        savedPosOfPlayer = playerController.transform.position;
+        Debug.Log("SavedPosOfPlayer = " + savedPosOfPlayer);
+        checkpointTransformValues = transform.position;
     }
 
     // Update is called once per frame
     void Update() {
 
+        
     }
     private void OnTriggerEnter2D(Collider2D other) {
         if (!other.CompareTag("Player")) return;
 
-        transformValues = transform.position;
-        Debug.Log(" Checkpoint! = " + transformValues);
+        savedPosOfPlayer = checkpointTransformValues;
+        Debug.Log(" Checkpoint! = " + checkpointTransformValues);
     }
 }

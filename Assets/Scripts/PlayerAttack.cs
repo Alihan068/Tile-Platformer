@@ -20,5 +20,8 @@ public class PlayerAttack : MonoBehaviour
             //then attack
             playerAttackCd = startAttackTime;
         }
+        else {
+            playerAttackCd -= Time.deltaTime;
+        }
     }
 }

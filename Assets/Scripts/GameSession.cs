@@ -16,9 +16,9 @@ public class GameSession : MonoBehaviour {
 
     [SerializeField] List<GameObject> checkPoints = new List<GameObject>();
     PlayerController playerController;
-    
 
-    public Vector2 checkpointPos = new Vector2(0, 0);
+
+    Vector3 checkpointPos;
 
     private void Awake() {
         int numGameSessions = FindObjectsByType<GameSession>(FindObjectsSortMode.None).Length;
@@ -31,8 +31,9 @@ public class GameSession : MonoBehaviour {
         }
     }
     void Start() {
+        playerController = FindFirstObjectByType<PlayerController>();
         hpText.text = "x" + playerLives.ToString();
-        scoreText.text = "x" + score.ToString();        
+        scoreText.text = "x" + score.ToString();
     }
 
     void Update() {
@@ -62,17 +63,17 @@ public class GameSession : MonoBehaviour {
     void ReloadLevel() {
         //Restart current level
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        SetPlayerSpawn(checkpointPos);
+        
     }
 
     public void AddToScore(int pointsToAdd) {
         score += pointsToAdd;
         scoreText.text = "x" + score.ToString();
     }
-    public void SetPlayerSpawn(Vector2 value) {
-        var player = FindAnyObjectByType<PlayerController>();
-        Debug.Log("Coordinates Set to = " + value);
-        player.transform.position = value;
+    public void SetPlayerSpawn() {
+        playerController.transform.position = checkpointPos;
+        //playerController.transform.position = value;
+        //Debug.Log("Coordinates Set to = " + value);
     }
 
 
