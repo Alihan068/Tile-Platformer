@@ -1,21 +1,34 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CheckPoint : MonoBehaviour {
-    Transform checkpointTransform;
-    Vector2 transformValues;
+    static Vector2 savedPosOfThePlayer; // store the position of the player 
 
-    void Start() {
-        transformValues = FindFirstObjectByType<GameSession>().checkpointPos;
+    static bool hasCheckpoint;
+
+    static PlayerController playerController;
+
+    static CheckPoint() {
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // Update is called once per frame
-    void Update() {
-
+    private void Start() {
+        playerController = FindFirstObjectByType<PlayerController>();
+        savedPosOfThePlayer = playerController.transform.position;
     }
+
     private void OnTriggerEnter2D(Collider2D other) {
         if (!other.CompareTag("Player")) return;
 
-        transformValues = transform.position;
-        Debug.Log(" Checkpoint! = " + transformValues);
+        savedPosOfThePlayer = transform.position;
+        hasCheckpoint = true;
+        Debug.Log(" Checkpoint! = " + savedPosOfThePlayer);
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        if (!hasCheckpoint) return;
+
+        var player = FindFirstObjectByType<PlayerController>();
+        player.transform.position = savedPosOfThePlayer;
     }
 }
