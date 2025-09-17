@@ -13,16 +13,6 @@ public class ScenePersist : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-    void Start()
-    {
-        
-    }
-
-
-    void Update()
-    {
-        
-    }
 
     public void ResetScenePersist() {
         Destroy(gameObject);

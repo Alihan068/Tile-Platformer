@@ -36,10 +36,6 @@ public class GameSession : MonoBehaviour {
         scoreText.text = "x" + score.ToString();
     }
 
-    void Update() {
-
-    }
-
     public void ProcessPlayerDeath() {
         if (playerLives > 1) {
             TakeLife();
@@ -70,11 +66,5 @@ public class GameSession : MonoBehaviour {
         score += pointsToAdd;
         scoreText.text = "x" + score.ToString();
     }
-    public void SetPlayerSpawn() {
-        playerController.transform.position = checkpointPos;
-        //playerController.transform.position = value;
-        //Debug.Log("Coordinates Set to = " + value);
-    }
-
 
 }
