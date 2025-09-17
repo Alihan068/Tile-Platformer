@@ -1,11 +1,11 @@
 using UnityEngine;
 
 public class CheckPoint : MonoBehaviour {
-    Transform checkPointTransform;
+    Transform checkpointTransform;
+    Vector2 transformValues;
 
     void Start() {
-        checkPointTransform = FindFirstObjectByType<PlayerController>().checkpointTransform;
-
+        transformValues = FindFirstObjectByType<GameSession>().checkpointPos;
     }
 
     // Update is called once per frame
@@ -13,11 +13,9 @@ public class CheckPoint : MonoBehaviour {
 
     }
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
-            Debug.Log(" Checkpoint! = " + transform.position);
-            checkPointTransform.position = transform.position;
+        if (!other.CompareTag("Player")) return;
 
-        }
-
+        transformValues = transform.position;
+        Debug.Log(" Checkpoint! = " + transformValues);
     }
 }

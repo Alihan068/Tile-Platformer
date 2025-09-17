@@ -10,10 +10,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
     [SerializeField] float deathSpin = 20f;
 
-    [SerializeField] CheckPoint checkPoint;
-
-    [HideInInspector] public Transform checkpointTransform;
-
+    //public Vector2 checkpointPos = new Vector2 (0, 0);
 
     Vector2 moveInput;
     Rigidbody2D rb2d;
@@ -23,14 +20,14 @@ public class PlayerController : MonoBehaviour {
 
     bool isAlive = true;
 
+
     void Start() {
-        checkpointTransform = GetComponent<Transform>();
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
-        checkpointTransform = GetComponent<Transform>();
-        SetPlayerSpawn(checkpointTransform);
+        //checkpointTransform = GetComponent<Transform>();
+        
         
     }
 
@@ -41,9 +38,6 @@ public class PlayerController : MonoBehaviour {
         Walk();
         FlipSprite();
         Death();
-    }
-    void SetPlayerSpawn(Transform position) {
-        transform.position = position.position;
     }
 
 

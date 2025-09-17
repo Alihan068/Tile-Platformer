@@ -5,8 +5,7 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameSession : MonoBehaviour
-{
+public class GameSession : MonoBehaviour {
     [SerializeField] int playerLives = 3;
     [SerializeField] int score = 0;
 
@@ -16,7 +15,10 @@ public class GameSession : MonoBehaviour
     [SerializeField] TextMeshProUGUI hpText;
 
     [SerializeField] List<GameObject> checkPoints = new List<GameObject>();
+    PlayerController playerController;
+    
 
+    public Vector2 checkpointPos = new Vector2(0, 0);
 
     private void Awake() {
         int numGameSessions = FindObjectsByType<GameSession>(FindObjectsSortMode.None).Length;
@@ -28,20 +30,17 @@ public class GameSession : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-    void Start()
-    {
-        
+    void Start() {
         hpText.text = "x" + playerLives.ToString();
-        scoreText.text = "x" + score.ToString();
+        scoreText.text = "x" + score.ToString();        
     }
 
-    void Update()
-    {
-        
+    void Update() {
+
     }
 
     public void ProcessPlayerDeath() {
-        if(playerLives > 1) {
+        if (playerLives > 1) {
             TakeLife();
         }
         else {
@@ -63,11 +62,18 @@ public class GameSession : MonoBehaviour
     void ReloadLevel() {
         //Restart current level
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SetPlayerSpawn(checkpointPos);
     }
 
     public void AddToScore(int pointsToAdd) {
         score += pointsToAdd;
         scoreText.text = "x" + score.ToString();
     }
+    public void SetPlayerSpawn(Vector2 value) {
+        var player = FindAnyObjectByType<PlayerController>();
+        Debug.Log("Coordinates Set to = " + value);
+        player.transform.position = value;
+    }
+
 
 }
