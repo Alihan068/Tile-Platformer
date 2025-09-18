@@ -48,38 +48,45 @@ public class Creature : MonoBehaviour {
             DamageEffects();
         }
     }
-    void Death() {
+    void DetectHazardDamage() {
         Collider2D[] colliders = GetComponents<Collider2D>();
         foreach (Collider2D collider in colliders) {
 
             if (collider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")) && isPlayer) {
                 TakeDamage(contactDamage);
             }
-
-            FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
-
-            isAlive = false;
-            animator.SetTrigger("death");
-            DeathEffects();
-
-        }
-        float CalculateFinalDamage(float incomingDamageAmount) {
-            float flatDamageRes = totalArmor / 10;
-            Debug.Log("Damage Reduce by = " + flatDamageRes);
-            float finalDamage = incomingDamageAmount - flatDamageRes;
-            Debug.Log("Damage taken = " + finalDamage);
-            return finalDamage;
-        }
-
-        void KnockbackCalculator(float amount) {
-            knockbackForce += amount / 100;
-            Vector2 direction = (rb2d.transform.position - this.transform.position).normalized;
-            knockbackAmount = direction * knockbackForce;
-            rb2d.AddForce(knockbackAmount, (ForceMode)ForceMode2D.Impulse);
-        }
-
-        void DamageEffects() {
-            hurtParticle.Play();
         }
     }
+    void Death() {
+
+        FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
+
+        isAlive = false;
+        animator.SetTrigger("death");
+        DeathEffects();
+
+    }
+
+
+
+
+    float CalculateFinalDamage(float incomingDamageAmount) {
+        float flatDamageRes = totalArmor / 10;
+        Debug.Log("Damage Reduce by = " + flatDamageRes);
+        float finalDamage = incomingDamageAmount - flatDamageRes;
+        Debug.Log("Damage taken = " + finalDamage);
+        return finalDamage;
+    }
+
+    void KnockbackCalculator(float amount) {
+        knockbackForce += amount / 100;
+        Vector2 direction = (rb2d.transform.position - this.transform.position).normalized;
+        knockbackAmount = direction * knockbackForce;
+        rb2d.AddForce(knockbackAmount, (ForceMode)ForceMode2D.Impulse);
+    }
+
+    void DamageEffects() {
+        hurtParticle.Play();
+    }
+
 }
