@@ -7,6 +7,8 @@ TagManager:
   - Coin
   - CheckPoint
   - Enemy
+  - Door
+  - Key
   layers:
   - Default
   - TransparentFX
@@ -21,7 +23,7 @@ TagManager:
   - Hazards
   - Exit
   - Interactables
-  - 
+  - Door
   - 
   - 
   - 
