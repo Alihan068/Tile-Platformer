@@ -1,9 +1,11 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class Creature : MonoBehaviour {
 
-    Rigidbody rb2d;
+    Rigidbody2D rb2d;
     ParticleSystem hurtParticle;
+    Animator animator;
 
     [Header("Stats")]
     //[SerializeField] float baseDamage = 10f;
@@ -16,15 +18,20 @@ public class Creature : MonoBehaviour {
     float maxHealth = 100f;
     float currentHealth = 100f;
 
+    [HideInInspector] public bool isAlive = true;
     public bool isPlayer = false;
+  
 
     public Vector2 knockbackAmount;
     [SerializeField] float knockbackForce = 1f;
     [SerializeField] float contactDamage = 10f;
 
+    [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
+    [SerializeField] float deathSpin = 20f;
     void Start() {
-        rb2d = GetComponent<Rigidbody>();
+        rb2d = GetComponent<Rigidbody2D>();
         hurtParticle = GetComponent<ParticleSystem>();
+        animator = GetComponent<Animator>();
 
         maxHealth = baseHealth + extraHealth;
         currentHealth = maxHealth;
@@ -60,14 +67,41 @@ public class Creature : MonoBehaviour {
     void Death() {
 
         FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
-
+        FindFirstObjectByType<PlayerController>().canMove = false;
         isAlive = false;
         animator.SetTrigger("death");
         DeathEffects();
 
     }
+    void DeathEffects() {
+        rb2d.linearVelocity = deathKick;
+        //RedColorBlink
+        GetComponent<SpriteRenderer>().color = Color.red;
+        Invoke(nameof(ResetSpriteColor), 0.2f);
+        //Stop Camera on death area
+        FindAnyObjectByType<CinemachineCamera>().enabled = false;
+        //Disable Colliders
+        Collider2D[] collider2Ds = GetComponents<Collider2D>();
+        foreach (Collider2D col in collider2Ds) {
+            col.enabled = false;
+        }
+        //DeathSpin
+        GetComponent<Rigidbody2D>().freezeRotation = false;
+        rb2d.AddTorque(deathSpin, ForceMode2D.Impulse);
 
+        Invoke(nameof(StopSpin), 2f);
 
+        Invoke(nameof(DestroyPlayer), 5f);
+    }
+    void ResetSpriteColor() {
+        GetComponent<SpriteRenderer>().color = Color.white;
+    }
+    void StopSpin() {
+        rb2d.angularVelocity = 0f;
+    }
+    void DestroyPlayer() {
+        Destroy(gameObject);
+    }
 
 
     float CalculateFinalDamage(float incomingDamageAmount) {
@@ -82,7 +116,7 @@ public class Creature : MonoBehaviour {
         knockbackForce += amount / 100;
         Vector2 direction = (rb2d.transform.position - this.transform.position).normalized;
         knockbackAmount = direction * knockbackForce;
-        rb2d.AddForce(knockbackAmount, (ForceMode)ForceMode2D.Impulse);
+        rb2d.AddForce(knockbackAmount, ForceMode2D.Impulse);
     }
 
     void DamageEffects() {
