@@ -20,7 +20,7 @@ public class Creature : MonoBehaviour {
 
     [HideInInspector] public bool isAlive = true;
     public bool isPlayer = false;
-  
+
 
     public Vector2 knockbackAmount;
     [SerializeField] float knockbackForce = 1f;
@@ -29,9 +29,15 @@ public class Creature : MonoBehaviour {
     [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
     [SerializeField] float deathSpin = 20f;
     void Start() {
-        rb2d = GetComponent<Rigidbody2D>();
-        hurtParticle = GetComponent<ParticleSystem>();
-        animator = GetComponent<Animator>();
+        if (rb2d != null) {
+            rb2d = GetComponent<Rigidbody2D>();
+        }
+        if (hurtParticle != null) {
+            hurtParticle = GetComponent<ParticleSystem>();
+        }
+        if (animator != null) {
+            animator = GetComponent<Animator>();
+        }
 
         maxHealth = baseHealth + extraHealth;
         currentHealth = maxHealth;
@@ -65,30 +71,35 @@ public class Creature : MonoBehaviour {
         }
     }
     void Death() {
-
-        FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
-        FindFirstObjectByType<PlayerController>().canMove = false;
-        isAlive = false;
+        if (isPlayer) {
+            FindFirstObjectByType<PlayerController>().canMove = false;
+            FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
+            isAlive = false;
+        }
         animator.SetTrigger("death");
         DeathEffects();
 
     }
     void DeathEffects() {
-        rb2d.linearVelocity = deathKick;
+        if (isPlayer) {
+            //Stop Camera on death area
+            FindAnyObjectByType<CinemachineCamera>().enabled = false;
+        }
+        
         //RedColorBlink
         GetComponent<SpriteRenderer>().color = Color.red;
         Invoke(nameof(ResetSpriteColor), 0.2f);
-        //Stop Camera on death area
-        FindAnyObjectByType<CinemachineCamera>().enabled = false;
         //Disable Colliders
         Collider2D[] collider2Ds = GetComponents<Collider2D>();
         foreach (Collider2D col in collider2Ds) {
             col.enabled = false;
         }
         //DeathSpin
-        GetComponent<Rigidbody2D>().freezeRotation = false;
-        rb2d.AddTorque(deathSpin, ForceMode2D.Impulse);
-
+        Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+            rb2d.linearVelocity = deathKick;
+            rb2d.freezeRotation = false;
+            rb2d.AddTorque(deathSpin, ForceMode2D.Impulse);
+        
         Invoke(nameof(StopSpin), 2f);
 
         Invoke(nameof(DestroyPlayer), 5f);
