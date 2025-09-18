@@ -5,16 +5,16 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour {
 
     [SerializeField] float moveSpeed = 5f;
-    public float currentHp = 100f;
-    public float attackDamage = 5f;
+    //public float currentHp = 100f;
+    //public float attackDamage = 5f;
 
     
 
-    ParticleSystem particleSystem;
+    //ParticleSystem myParticleSystem;
 
     Rigidbody2D rb2d;
     void Start() {
-        particleSystem = GetComponent<ParticleSystem>();
+       // myParticleSystem = GetComponent<ParticleSystem>();
         rb2d = GetComponent<Rigidbody2D>();
     }
 
@@ -32,15 +32,15 @@ public class EnemyController : MonoBehaviour {
         transform.localScale = new Vector2(-(Mathf.Sign(rb2d.linearVelocity.x)), 1f);
     }
 
-    public void TakeDamage(float damage) {
-        currentHp -= damage;
-        Debug.Log(damage + "Damage Taken");
-        DamageEffects();
-    }
-    void DamageEffects() {
+    //public void TakeDamage(float damage) {
+    //    currentHp -= damage;
+    //    Debug.Log(damage + "Damage Taken");
+    //    DamageEffects();
+    //}
+//    void DamageEffects() {
         
-        particleSystem.Play();
+//        myParticleSystem.Play();
         
-    }
+//    }
 }
 
