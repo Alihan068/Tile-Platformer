@@ -1,9 +1,9 @@
+using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
-public class Health : MonoBehaviour
-{
+public class Health : MonoBehaviour {
     [SerializeField] float baseArmor = 10f;
     [SerializeField] float baseHealth = 100f;
     [SerializeField] float knockbackForce = 1f;
@@ -16,16 +16,18 @@ public class Health : MonoBehaviour
     float maxHealth = 100f;
     float currentHealth = 100f;
 
-    GenericCreature creature;
+    //GenericCreature creature; //deleted
     Rigidbody2D rb2d;
     ParticleSystem hurtParticle;
+    GameSession gameSession;
+    Controller controller;
 
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
 
-    void Start()
-    {
-        creature = GetComponent<GenericCreature>();
+    void Start() {
+        controller = GetComponent<Controller>();
+
         rb2d = GetComponent<Rigidbody2D>();
         hurtParticle = GetComponent<ParticleSystem>();
 
@@ -34,28 +36,20 @@ public class Health : MonoBehaviour
         totalArmor = baseArmor + extraArmor;
     }
 
-    void Update()
-    {
-        // Player-only hazard tick
-        if (creature != null && creature.isPlayer)
-        {
-            DetectHazardDamage();
-        }
+    void Update() {
+       
     }
 
-    public float GetHealthPercentage()
-    {
+    public float GetHealthPercentage() {
         return currentHealth / maxHealth;
     }
 
-    public void TakeDamage(float incomingDamage, Vector3 hitFromPosition)
-    {
+    public void TakeDamage(float incomingDamage, Vector3 hitFromPosition) {
         float finalDamage = CalculateFinalDamage(incomingDamage);
 
-        if (currentHealth <= finalDamage)
-        {
-            Death();
-            return;
+        if (currentHealth <= finalDamage) {
+            Debug.Log("Player Died!");
+            controller.DeathSequence();
         }
 
         currentHealth -= finalDamage;
@@ -65,29 +59,25 @@ public class Health : MonoBehaviour
         DamageEffects();
     }
 
-    void DetectHazardDamage()
-    {
+    void DetectHazardDamage() {
         Collider2D[] colliders = GetComponents<Collider2D>();
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider.IsTouchingLayers(LayerMask.GetMask("Hazards")))
-            {
+        foreach (Collider2D collider in colliders) {
+            if (collider.IsTouchingLayers(LayerMask.GetMask("Hazards"))) {
+                Debug.Log("ContactDamage");
                 TakeDamage(contactDamage, transform.position);
                 return;
             }
         }
     }
 
-    float CalculateFinalDamage(float incomingDamageAmount)
-    {
+    float CalculateFinalDamage(float incomingDamageAmount) {
         float flatDamageReduction = totalArmor / 10f;
         float finalDamage = Mathf.Max(1f, incomingDamageAmount - flatDamageReduction);
         Debug.Log($"Incoming: {incomingDamageAmount}, Reduced by: {flatDamageReduction}, Final: {finalDamage}");
         return finalDamage;
     }
 
-    void KnockbackCalculator(float damageAmount, Vector3 hitFromPosition)
-    {
+    void KnockbackCalculator(float damageAmount, Vector3 hitFromPosition) {
         if (rb2d == null) return;
 
         float dynamicKnockback = knockbackForce + (damageAmount / 100f);
@@ -99,26 +89,10 @@ public class Health : MonoBehaviour
         rb2d.AddForce(direction * dynamicKnockback, ForceMode2D.Impulse);
     }
 
-    void DamageEffects()
-    {
-        if (hurtParticle != null)
-        {
+    void DamageEffects() {
+        if (hurtParticle != null) {
             hurtParticle.Play();
         }
     }
-
-    void Death()
-    {
-        Debug.Log($"{gameObject.name} has died!");
-
-        if (creature != null && !creature.isPlayer)
-        {
-            // animation
-            Destroy(gameObject, 0.5f);
-        }
-        else
-        {
-            // Handle player death (respawn/game over) elsewhere
-        }
-    }
 }
+

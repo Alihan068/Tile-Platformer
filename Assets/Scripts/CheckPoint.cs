@@ -4,11 +4,11 @@ public class CheckPoint : MonoBehaviour {
     Transform checkpointTransform;
     Vector3 checkpointTransformValues; //store checkpoint gameobject position
     Vector3 savedPosOfPlayer; //store position of player
-    PlayerController playerController;
+    Controller controller;
 
     void Start() {
-        playerController = FindFirstObjectByType<PlayerController>();
-        savedPosOfPlayer = playerController.transform.position;
+        controller = FindFirstObjectByType<Controller>();
+        savedPosOfPlayer = controller.transform.position;
         Debug.Log("SavedPosOfPlayer = " + savedPosOfPlayer);
         checkpointTransformValues = transform.position;
     }

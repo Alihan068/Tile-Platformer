@@ -1,5 +1,6 @@
 using System.Drawing;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour {
@@ -24,8 +25,10 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        moveSpeed = -moveSpeed;
-        FlipEnemyFacing();
+        if (!collision.gameObject.CompareTag("Player")) {
+            moveSpeed = -moveSpeed;
+            FlipEnemyFacing();
+        }
     }
 
     void FlipEnemyFacing() {

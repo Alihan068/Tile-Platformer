@@ -73,46 +73,46 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void Death() {
-        //if (boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")) ||
-        //    capsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards"))) {
+    //void Death() {
+    //    //if (boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")) ||
+    //    //    capsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards"))) {
 
-        //    FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
+    //    //    FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
 
-        //    isAlive = false;
-        //    animator.SetTrigger("death");
-        //    DeathEffects();
+    //    //    isAlive = false;
+    //    //    animator.SetTrigger("death");
+    //    //    DeathEffects();
 
-        }
-        void DeathEffects() {
-        rb2d.linearVelocity = deathKick;
-        //RedColorBlink
-        GetComponent<SpriteRenderer>().color = Color.red;
-        Invoke(nameof(ResetSpriteColor), 0.2f);
-        //Stop Camera on death area
-        FindAnyObjectByType<CinemachineCamera>().enabled = false;
-        //Disable Colliders
-        Collider2D[] collider2Ds = GetComponents<Collider2D>();
-        foreach (Collider2D col in collider2Ds) {
-            col.enabled = false;
-        }
-        //DeathSpin
-        GetComponent<Rigidbody2D>().freezeRotation = false;
-        rb2d.AddTorque(deathSpin, ForceMode2D.Impulse);
+    //    }
+    //    void DeathEffects() {
+    //    rb2d.linearVelocity = deathKick;
+    //    //RedColorBlink
+    //    GetComponent<SpriteRenderer>().color = Color.red;
+    //    Invoke(nameof(ResetSpriteColor), 0.2f);
+    //    //Stop Camera on death area
+    //    FindAnyObjectByType<CinemachineCamera>().enabled = false;
+    //    //Disable Colliders
+    //    Collider2D[] collider2Ds = GetComponents<Collider2D>();
+    //    foreach (Collider2D col in collider2Ds) {
+    //        col.enabled = false;
+    //    }
+    //    //DeathSpin
+    //    GetComponent<Rigidbody2D>().freezeRotation = false;
+    //    rb2d.AddTorque(deathSpin, ForceMode2D.Impulse);
 
-        Invoke(nameof(StopSpin), 2f);
+    //    Invoke(nameof(StopSpin), 2f);
 
-        Invoke(nameof(DestroyPlayer), 5f);
+    //    Invoke(nameof(DestroyPlayer), 5f);
 
-    }
-    void ResetSpriteColor() {
-        GetComponent<SpriteRenderer>().color = Color.white;
-    }
-    void StopSpin() {
-        rb2d.angularVelocity = 0f;
-    }
-    void DestroyPlayer() {
-        Destroy(gameObject);
-    }
+    //}
+    //void ResetSpriteColor() {
+    //    GetComponent<SpriteRenderer>().color = Color.white;
+    //}
+    //void StopSpin() {
+    //    rb2d.angularVelocity = 0f;
+    //}
+    //void DestroyPlayer() {
+    //    Destroy(gameObject);
+    //}
 }
 
