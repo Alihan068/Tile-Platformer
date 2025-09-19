@@ -37,12 +37,12 @@ public class Attack : MonoBehaviour {
         canAttack = false;
         //GetComponent<Controller>().enabled = false;
 
-        if (animator != null) {
+        //if (animator != null) {
             //Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
             //rb2d.linearVelocity = Vector2.zero;
             Debug.Log(gameObject + "AttackAnim");
             animator.SetTrigger("Attack");
-        }
+       // }
 
         StartCoroutine(Cooldown());
     }
