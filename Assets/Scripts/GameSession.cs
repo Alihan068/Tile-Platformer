@@ -15,8 +15,7 @@ public class GameSession : MonoBehaviour {
     [SerializeField] TextMeshProUGUI hpText;
 
     [SerializeField] List<GameObject> checkPoints = new List<GameObject>();
-    PlayerController playerController;
-
+    Controller playerController;
 
     Vector3 checkpointPos;
 
@@ -31,7 +30,7 @@ public class GameSession : MonoBehaviour {
         }
     }
     void Start() {
-        playerController = FindFirstObjectByType<PlayerController>();
+        playerController = FindFirstObjectByType<Controller>();
         hpText.text = "x" + playerLives.ToString();
         scoreText.text = "x" + score.ToString();
     }
