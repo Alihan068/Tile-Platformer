@@ -18,10 +18,6 @@ GameObject:
   - component: {fileID: 1626341086864979356}
   - component: {fileID: -6064835539470166195}
   - component: {fileID: -2858688277730211230}
-  - component: {fileID: 3420088401515328324}
-  - component: {fileID: 2386205104053207792}
-  - component: {fileID: 8096931680470799243}
-  - component: {fileID: 343998704455460309}
   - component: {fileID: 2615423924342608083}
   m_Layer: 9
   m_Name: Skeleton
@@ -5063,63 +5059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDamage: 10
-  attackCooldown: 0.5
---- !u!114 &3420088401515328324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2325159762350714605}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d10b53e40a39a148a1e6e21b6de28cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayer: 0
---- !u!114 &2386205104053207792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2325159762350714605}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ff9defacda02fc41be9bc118d992623, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Attack
-  attackDamage: 10
-  attackCooldown: 0.5
---- !u!114 &8096931680470799243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2325159762350714605}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f385eb93ceaf70d4fbd97eb7bbf31e99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Health
-  baseArmor: 10
-  baseHealth: 100
-  knockbackForce: 1
-  contactDamage: 10
---- !u!114 &343998704455460309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2325159762350714605}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d10b53e40a39a148a1e6e21b6de28cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GenericCreature
-  isPlayer: 0
+  attackCooldown: 2
 --- !u!114 &2615423924342608083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5185,10 +5125,10 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -5228,6 +5168,6 @@ PolygonCollider2D:
       - {x: -1.3065357, y: 0.5504346}
       - {x: -1.0121965, y: 0.28049028}
       - {x: -0.80679846, y: -0.19083083}
-      - {x: -0.63389146, y: -1.1497219}
-      - {x: 0.96796703, y: -1.1588326}
+      - {x: -0.21704423, y: -1.0821247}
+      - {x: 0.99049854, y: -1.0799694}
   m_UseDelaunayMesh: 0

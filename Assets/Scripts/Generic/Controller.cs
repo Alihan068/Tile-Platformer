@@ -12,7 +12,7 @@ public class Controller : MonoBehaviour {
     public bool isPlayer;
     [HideInInspector] public bool isAlive = true;
 
-    [SerializeField] float moveSpeed = 7f;
+    public float moveSpeed = 7f;
     [SerializeField] float jumpForce = 5f;
     [SerializeField] bool patrolEnabled;
     [SerializeField] float patrolSpeed = 5f;
@@ -22,7 +22,7 @@ public class Controller : MonoBehaviour {
     Rigidbody2D rb2d;
     Animator animator;
     Vector2 moveInput;
-
+    Attack attack;
     //CinemachineCamera cinemachine;
 
     [SerializeField] Vector2 deathKick = new Vector2(10, 10);
@@ -34,6 +34,7 @@ public class Controller : MonoBehaviour {
         isAlive = true;
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        attack = GetComponent<Attack>();
     }
     void Start() {
 
@@ -64,7 +65,7 @@ public class Controller : MonoBehaviour {
 
         var attack = GetComponent<Attack>();
         if (attack != null) {
-            attack.OnAttack();
+            attack.AttackSequence();
         }
     }
     void OnJump(InputValue value) {
@@ -78,7 +79,7 @@ public class Controller : MonoBehaviour {
 
     }
     bool IsGrounded() {
-        //
+
         return (true);
     }
 
@@ -92,7 +93,7 @@ public class Controller : MonoBehaviour {
             animator.SetBool("isWalking", hasHorizontal);
         }
 
-       
+
     }
     void FlipSprite() {
         //Check if Entity is moving
@@ -112,10 +113,16 @@ public class Controller : MonoBehaviour {
     }
     private void OnTriggerEnter2D(Collider2D other) {
         if (isPlayer) return;
-        if (!other.gameObject.CompareTag("Player")) return;
-        animator.SetTrigger("Attack");
+        //if (!other.gameObject.CompareTag("Player")) return;
+        attack.AttackSequence();
+        //Invoke(nameof(StopCreature), 2f);
 
 
+    }
+    void StopCreature() {
+        if (!isPlayer) return;
+        patrolEnabled = false;
+        moveInput.x = 0;
     }
     public void DeathSequence() {
         Debug.Log($"{gameObject.name} has died!");
@@ -124,8 +131,8 @@ public class Controller : MonoBehaviour {
         if (!isPlayer) {
             Destroy(gameObject, 0.5f);
         }
-        else {        
-            GameSession gameSession = FindFirstObjectByType<GameSession>(); 
+        else {
+            GameSession gameSession = FindFirstObjectByType<GameSession>();
             gameSession.ProcessPlayerDeath();
 
         }
