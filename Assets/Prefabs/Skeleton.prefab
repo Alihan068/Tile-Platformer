@@ -5071,6 +5071,9 @@ MonoBehaviour:
   baseHealth: 100
   knockbackForce: 1
   contactDamage: 10
+  hazardTickRate: 1
+  deathKick: {x: 10, y: 10}
+  deathSpinImpulse: 20
 --- !u!114 &5120326673161579731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5088,10 +5091,9 @@ MonoBehaviour:
   jumpForce: 5
   groundLayerName: Ground
   useBoxForGroundCheck: 1
-  patrolEnabled: 1
+  patrolEnabled: 0
   patrolSpeed: 0.1
-  deathKick: {x: 10, y: 10}
-  deathSpinImpulse: 20
+  isAlive: 1
 --- !u!61 &5655903650021763504
 BoxCollider2D:
   m_ObjectHideFlags: 0

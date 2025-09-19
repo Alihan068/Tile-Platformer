@@ -60874,14 +60874,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skeleton (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 5120326673161579731, guid: 709574921ef0a08468e75d9f5c3094c3, type: 3}
-      propertyPath: patrolEnabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5655903650021763504, guid: 709574921ef0a08468e75d9f5c3094c3, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8059360527300080883, guid: 709574921ef0a08468e75d9f5c3094c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.0699997

@@ -135,7 +135,10 @@ public class Health : MonoBehaviour
 
         if (controller != null && !controller.IsPlayer)
         {
-            Destroy(gameObject, 0.5f);
+            animator.SetTrigger("Death");
+            DisableAllColliders();
+            rb2d.constraints = RigidbodyConstraints2D.FreezeAll;
+            Destroy(gameObject, 1.5f);
         }
         else if (controller != null && controller.IsPlayer)
         {
@@ -163,10 +166,15 @@ public class Health : MonoBehaviour
         rb2d.freezeRotation = false;
         rb2d.AddTorque(deathSpinImpulse, ForceMode2D.Impulse);
 
-        foreach (var col in GetComponents<Collider2D>())
-            col.enabled = false;
+        DisableAllColliders();
 
         Invoke(nameof(StopSpin), 2f);
+    }
+
+    void DisableAllColliders()
+    {
+        foreach (var col in GetComponents<Collider2D>())
+            col.enabled = false;
     }
 
     void ResetSpriteColor()

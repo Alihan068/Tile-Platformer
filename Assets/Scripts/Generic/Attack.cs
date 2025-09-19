@@ -30,7 +30,7 @@ public class Attack : MonoBehaviour
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
 
-        Debug.Log($"[Attack:{name}] isPlayer={isPlayer}, weaponTriggers={(weaponTriggers == null ? 0 : weaponTriggers.Length)}, damageableMask={damageableLayers.value}");
+        //Debug.Log($"[Attack:{name}] isPlayer={isPlayer}, weaponTriggers={(weaponTriggers == null ? 0 : weaponTriggers.Length)}, damageableMask={damageableLayers.value}");
 
         if (weaponTriggers != null && weaponTriggers.Length > 0)
         {
