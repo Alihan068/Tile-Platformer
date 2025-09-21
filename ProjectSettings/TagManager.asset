@@ -9,7 +9,7 @@ TagManager:
   - Enemy
   - Door
   - Key
-  - EquippedWeapon
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -25,7 +25,7 @@ TagManager:
   - Exit
   - Interactables
   - Door
-  - 
+  - DamageArea
   - 
   - 
   - 

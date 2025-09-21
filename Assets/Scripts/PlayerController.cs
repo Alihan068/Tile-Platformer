@@ -7,8 +7,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float jumpForce = 5f;
 
-    [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
-    [SerializeField] float deathSpin = 20f;
 
     //public Vector2 checkpointPos = new Vector2 (0, 0);
 

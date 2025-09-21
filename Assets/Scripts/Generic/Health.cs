@@ -37,7 +37,7 @@ public class Health : MonoBehaviour {
     }
 
     void Update() {
-       
+
     }
 
     public float GetHealthPercentage() {
@@ -78,7 +78,7 @@ public class Health : MonoBehaviour {
     }
 
     void KnockbackCalculator(float damageAmount, Vector3 hitFromPosition) {
-        if (rb2d == null) return;
+        //if (rb2d == null) return;
 
         float dynamicKnockback = knockbackForce + (damageAmount / 100f);
 
@@ -93,6 +93,14 @@ public class Health : MonoBehaviour {
         if (hurtParticle != null) {
             hurtParticle.Play();
         }
+    }
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (!other.gameObject.CompareTag("Weapon")) return;
+        Vector3 otherPos = other.transform.position;
+        float takenDamageRaw = other.GetComponentInParent<Attack>().TotalAttackCalculator();
+        TakeDamage(takenDamageRaw, otherPos);
+
+
     }
 }
 

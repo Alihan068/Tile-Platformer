@@ -1,4 +1,5 @@
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
@@ -13,6 +14,7 @@ public class Controller : MonoBehaviour {
     [HideInInspector] public bool isAlive = true;
 
     public float moveSpeed = 7f;
+    float saveSpeed;
     [SerializeField] float jumpForce = 5f;
     [SerializeField] bool patrolEnabled;
     [SerializeField] float patrolSpeed = 5f;
@@ -23,6 +25,7 @@ public class Controller : MonoBehaviour {
     Animator animator;
     Vector2 moveInput;
     Attack attack;
+    Health health;
     //CinemachineCamera cinemachine;
 
     [SerializeField] Vector2 deathKick = new Vector2(10, 10);
@@ -35,6 +38,7 @@ public class Controller : MonoBehaviour {
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         attack = GetComponent<Attack>();
+        health = GetComponent<Health>();
     }
     void Start() {
 
@@ -44,15 +48,21 @@ public class Controller : MonoBehaviour {
     void Update() {
         if (!isAlive) return;
 
-        if (!isPlayer && patrolEnabled) {
-            moveInput.x = Mathf.Sign(patrolSpeed);
+        if (!isPlayer) {
+            if (!patrolEnabled) {
+                patrolSpeed = 0;
+            }
+            else {
+                moveInput.x = Mathf.Sign(patrolSpeed);
+            }
         }
     }
 
     void FixedUpdate() {
-        //TryJump
+
         Walk();
         FlipSprite();
+
     }
 
     void OnMove(InputValue value) {
@@ -97,7 +107,7 @@ public class Controller : MonoBehaviour {
     }
     void FlipSprite() {
         //Check if Entity is moving
-        bool EntityHasHorizntalSpeed = Mathf.Abs(rb2d.linearVelocity.x) > Mathf.Epsilon;
+        bool EntityHasHorizntalSpeed = Mathf.Abs(moveInput.x) > Mathf.Epsilon;
 
         if (EntityHasHorizntalSpeed) {
             transform.localScale =
@@ -107,23 +117,22 @@ public class Controller : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) return;
+        if (collision.gameObject.CompareTag("Weapon")) return;
         patrolSpeed = -patrolSpeed;
-        FlipSprite();
+        //moveSpeed = saveSpeed;
 
     }
     private void OnTriggerEnter2D(Collider2D other) {
         if (isPlayer) return;
-        //if (!other.gameObject.CompareTag("Player")) return;
+        if (!other.gameObject.CompareTag("Player")) return;
+        saveSpeed = moveSpeed;
+        //moveSpeed = 0;
+        FlipSprite();
         attack.AttackSequence();
-        //Invoke(nameof(StopCreature), 2f);
-
+        transform.localScale = new Vector2(Mathf.Sign(other.transform.localScale.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y);
 
     }
-    void StopCreature() {
-        if (!isPlayer) return;
-        patrolEnabled = false;
-        moveInput.x = 0;
-    }
+
     public void DeathSequence() {
         Debug.Log($"{gameObject.name} has died!");
         DeathEffects();
