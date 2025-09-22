@@ -95,7 +95,7 @@ public class Controller : MonoBehaviour {
     }
 
     void Walk() {
-        if (!canMove) return;       
+        //if (!canMove) return;       
         
         Vector2 vector = rb2d.linearVelocity;
         vector.x = moveInput.x * moveSpeed;
