@@ -60882,6 +60882,10 @@ PrefabInstance:
       value: 16384
       objectReference: {fileID: 0}
     - target: {fileID: 5061593871498488392, guid: 709574921ef0a08468e75d9f5c3094c3, type: 3}
+      propertyPath: m_Name
+      value: AttackHitbox
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061593871498488392, guid: 709574921ef0a08468e75d9f5c3094c3, type: 3}
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}

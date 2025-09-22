@@ -15,6 +15,8 @@ public class Controller : MonoBehaviour {
 
     public float moveSpeed = 7f;
     float saveSpeed;
+    public bool canMove = true;
+
     [SerializeField] float jumpForce = 5f;
     [SerializeField] bool patrolEnabled;
     [SerializeField] float patrolSpeed = 5f;
@@ -30,7 +32,6 @@ public class Controller : MonoBehaviour {
 
     [SerializeField] Vector2 deathKick = new Vector2(10, 10);
     [SerializeField] float deathSpin = 5f;
-
 
     void Awake() {
         //collider2d = GetComponent<Collider2D>();
@@ -94,6 +95,8 @@ public class Controller : MonoBehaviour {
     }
 
     void Walk() {
+        if (!canMove) return;       
+        
         Vector2 vector = rb2d.linearVelocity;
         vector.x = moveInput.x * moveSpeed;
         rb2d.linearVelocity = vector;
@@ -125,10 +128,11 @@ public class Controller : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D other) {
         if (isPlayer) return;
         if (!other.gameObject.CompareTag("Player")) return;
-        saveSpeed = moveSpeed;
         //moveSpeed = 0;
         FlipSprite();
         attack.AttackSequence();
+
+        //Face to other object
         transform.localScale = new Vector2(Mathf.Sign(other.transform.localScale.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y);
 
     }

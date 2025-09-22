@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Attack : MonoBehaviour {
@@ -30,6 +31,7 @@ public class Attack : MonoBehaviour {
         //if (!isPlayer) return;
         //Debug.Log(gameObject + " AttackSequence");
         TryStartAttack();
+
     }
 
     void TryStartAttack() {
