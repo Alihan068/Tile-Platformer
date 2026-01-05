@@ -31,10 +31,13 @@ public class PlayerController : MonoBehaviour {
         if (!canMove) return;
         if (creature != null && creature.IsKnockedBack) return;
 
+        if (boxCollider2D.IsTouchingLayers(jumpables) || boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Hazards"))) {
+            animator.SetBool("isJumping", false);
+        }
+
         Walk();
         FlipSprite();
     }
-
     void OnMove(InputValue value) {
         if (!canMove) return;
         moveInput = value.Get<Vector2>();
@@ -61,7 +64,8 @@ public class PlayerController : MonoBehaviour {
 
         if (value.isPressed) {
             rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, jumpForce);
-        }
+            animator.SetBool("isJumping", true);
+        } 
     }
     void OnAttack(InputValue value) {
         if (!canMove) return;

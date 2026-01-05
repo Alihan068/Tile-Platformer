@@ -54,7 +54,8 @@ MonoBehaviour:
   maxHealth: 100
   damageReduction: 10
   isAlive: 1
-  knockbackForce: 1
+  baseKnockbackForce: 10
+  knockbackDamageMultiplier: 0.5
   contactDamage: 10
   deathKick: {x: 10, y: 10}
   deathSpin: 20
@@ -189,7 +190,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4078712146779249403}
@@ -238,12 +239,12 @@ SpriteRenderer:
   m_SortingLayerID: -1361719741
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1167975446, guid: 496562456fdbe6647887febf11640c70, type: 3}
+  m_Sprite: {fileID: -1294749824, guid: f60f4991dca3990459360885215fb384, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 2.25}
+  m_Size: {x: 2.25, y: 2.375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -283,8 +284,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.045}
-  m_Size: {x: 1.5, y: 2.15}
+  m_Offset: {x: 0.45, y: -0.18}
+  m_Size: {x: 1.36, y: 1.8}
   m_Direction: 0
 --- !u!61 &7763613050851844176
 BoxCollider2D:
@@ -320,17 +321,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.95}
+  m_Offset: {x: 0.45, y: -0.84}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2.25}
-    newSize: {x: 2, y: 2.25}
+    oldSize: {x: 2.25, y: 2.375}
+    newSize: {x: 2.25, y: 2.375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.26, y: 0.37215292}
+  m_Size: {x: 1.4, y: 0.7}
   m_EdgeRadius: 0
 --- !u!95 &5524822595138137853
 Animator:
