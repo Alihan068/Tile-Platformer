@@ -1,46 +1,41 @@
-using System.Drawing;
-using Unity.Cinemachine;
 using UnityEngine;
 
+public enum EnemyType {
+    Walker,
+    Flyer,
+    Shooter
+}
 public class EnemyController : MonoBehaviour {
 
+    public enum EnemyState {
+        Walking,
+        Attacking,
+        Dead
+    }
+
     [SerializeField] float moveSpeed = 5f;
-    //public float currentHp = 100f;
-    //public float attackDamage = 5f;
-
-    
-
-    //ParticleSystem myParticleSystem;
-
     Rigidbody2D rb2d;
-    void Start() {
-       // myParticleSystem = GetComponent<ParticleSystem>();
+    BoxCollider2D boxCollider;
+
+    void Awake() {
         rb2d = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
-    // Update is called once per frame
-    void Update() {
-            rb2d.linearVelocity = new Vector2(moveSpeed, rb2d.linearVelocity.y);      
-    }
-
-    private void OnTriggerExit2D(Collider2D collision) {
-        moveSpeed = -moveSpeed;
+    void FixedUpdate() {
+        Walk();
         FlipEnemyFacing();
     }
 
-    void FlipEnemyFacing() {
-        transform.localScale = new Vector2(-(Mathf.Sign(rb2d.linearVelocity.x)), 1f);
+    public void TurnEntity() {
+         moveSpeed = -moveSpeed;
     }
 
-    //public void TakeDamage(float damage) {
-    //    currentHp -= damage;
-    //    Debug.Log(damage + "Damage Taken");
-    //    DamageEffects();
-    //}
-//    void DamageEffects() {
-        
-//        myParticleSystem.Play();
-        
-//    }
-}
+    void FlipEnemyFacing() {
+        transform.localScale = new Vector2((Mathf.Sign(rb2d.linearVelocity.x) * Mathf.Abs(transform.localScale.x)), transform.localScale.y);
+    }
 
+    void Walk() {
+        rb2d.linearVelocity = new Vector2(moveSpeed, rb2d.linearVelocity.y);
+    }
+}

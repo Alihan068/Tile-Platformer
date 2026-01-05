@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -6,132 +7,142 @@ public class Creature : MonoBehaviour {
     Rigidbody2D rb2d;
     ParticleSystem hurtParticle;
     Animator animator;
+    SpriteRenderer spriteRenderer;
+    Collider2D[] colliders;
 
     [Header("Stats")]
-    //[SerializeField] float baseDamage = 10f;
-    [SerializeField] float baseArmor = 10f;
-    float extraArmor = 0f;
-    float totalArmor;
-
-    [SerializeField] float baseHealth = 100f;
-    float extraHealth = 0f;
-    float maxHealth = 100f;
-    float currentHealth = 100f;
-
-    [HideInInspector] public bool isAlive = true;
     public bool isPlayer = false;
 
+    [SerializeField] float maxHealth = 100f;
+    float currentHealth;
 
-    public Vector2 knockbackAmount;
-    [SerializeField] float knockbackForce = 1f;
+    [SerializeField] float damageReduction = 10f;
+
+    [HideInInspector] public bool isAlive = true;
+
+    [SerializeField] float knockbackForce = 5f;
     [SerializeField] float contactDamage = 10f;
 
     [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
     [SerializeField] float deathSpin = 20f;
-    void Start() {
-        if (rb2d != null) {
-            rb2d = GetComponent<Rigidbody2D>();
-        }
-        if (hurtParticle != null) {
-            hurtParticle = GetComponent<ParticleSystem>();
-        }
-        if (animator != null) {
-            animator = GetComponent<Animator>();
-        }
 
-        maxHealth = baseHealth + extraHealth;
-        currentHealth = maxHealth;
-        totalArmor = baseArmor + extraArmor;
+    Coroutine coroutine;
+    bool canTakeDamage = true;
+
+    void Awake() {
+        rb2d = GetComponent<Rigidbody2D>();
+        hurtParticle = GetComponent<ParticleSystem>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        colliders = GetComponents<Collider2D>();
     }
 
-    // Update is called once per frame
-    void Update() {
+    void Start() {
+        currentHealth = maxHealth;
+    }
 
+    void FixedUpdate() {
+        if (isAlive) {
+            DetectHazardDamage();
+        }
     }
 
     public void TakeDamage(float amount) {
-        if (currentHealth < amount) {
+        if (!isAlive || !canTakeDamage) return;
+
+        StartCoroutine(ImmunityFrame());
+
+        float finalDamage = CalculateFinalDamage(amount);
+
+        currentHealth -= finalDamage;
+
+        Debug.Log($"Damage Taken: {finalDamage}, Current HP: {currentHealth}");
+
+        if (currentHealth <= 0) {
             Death();
         }
         else {
-            float finalDamage = CalculateFinalDamage(amount);
-            KnockbackCalculator(finalDamage);
-            currentHealth = -finalDamage;
-            Debug.Log("Current hp = " + currentHealth);
+            ApplyKnockback();
             DamageEffects();
         }
     }
-    void DetectHazardDamage() {
-        Collider2D[] colliders = GetComponents<Collider2D>();
-        foreach (Collider2D collider in colliders) {
+    IEnumerator ImmunityFrame() {
+        canTakeDamage = false;
+        yield return new WaitForSeconds(0.5f);
+        canTakeDamage = true;
+    }
 
-            if (collider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")) && isPlayer) {
+    void DetectHazardDamage() {
+        if (!isPlayer) return;
+
+        foreach (Collider2D col in colliders) {
+            if (col.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards"))) {
                 TakeDamage(contactDamage);
+                return;
             }
         }
     }
-    void Death() {
-        if (isPlayer) {
-            FindFirstObjectByType<PlayerController>().canMove = false;
-            FindFirstObjectByType<GameSession>().ProcessPlayerDeath();
-            isAlive = false;
-        }
-        animator.SetTrigger("death");
-        DeathEffects();
 
-    }
-    void DeathEffects() {
+    void Death() {
+        isAlive = false;
+
         if (isPlayer) {
-            //Stop Camera on death area
-            FindAnyObjectByType<CinemachineCamera>().enabled = false;
+            PlayerController pc = GetComponent<PlayerController>();
+            if (pc != null) pc.canMove = false;
+
+            GameSession session = FindFirstObjectByType<GameSession>();
+            if (session != null) session.ProcessPlayerDeath();
+
+            var camera = FindAnyObjectByType<CinemachineCamera>();
+            if (camera != null) camera.enabled = false;
         }
-        
-        //RedColorBlink
-        GetComponent<SpriteRenderer>().color = Color.red;
+
+        if (animator != null) animator.SetTrigger("death");
+        DeathEffects();
+    }
+
+    void DeathEffects() {
+        spriteRenderer.color = Color.red;
         Invoke(nameof(ResetSpriteColor), 0.2f);
-        //Disable Colliders
-        Collider2D[] collider2Ds = GetComponents<Collider2D>();
-        foreach (Collider2D col in collider2Ds) {
+
+        foreach (Collider2D col in colliders) {
             col.enabled = false;
         }
-        //DeathSpin
-        Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+
+        if (rb2d != null) {
             rb2d.linearVelocity = deathKick;
             rb2d.freezeRotation = false;
             rb2d.AddTorque(deathSpin, ForceMode2D.Impulse);
-        
-        Invoke(nameof(StopSpin), 2f);
+            Invoke(nameof(StopSpin), 2f);
+        }
 
-        Invoke(nameof(DestroyPlayer), 5f);
+        Invoke(nameof(DestroyCreature), 5f);
     }
+
     void ResetSpriteColor() {
-        GetComponent<SpriteRenderer>().color = Color.white;
+        spriteRenderer.color = Color.white;
     }
+
     void StopSpin() {
-        rb2d.angularVelocity = 0f;
+        if (rb2d != null) rb2d.angularVelocity = 0f;
     }
-    void DestroyPlayer() {
+
+    void DestroyCreature() {
         Destroy(gameObject);
     }
 
-
     float CalculateFinalDamage(float incomingDamageAmount) {
-        float flatDamageRes = totalArmor / 10;
-        Debug.Log("Damage Reduce by = " + flatDamageRes);
-        float finalDamage = incomingDamageAmount - flatDamageRes;
-        Debug.Log("Damage taken = " + finalDamage);
-        return finalDamage;
+        return Mathf.Max(0, incomingDamageAmount - (incomingDamageAmount / damageReduction));
     }
 
-    void KnockbackCalculator(float amount) {
-        knockbackForce += amount / 100;
-        Vector2 direction = (rb2d.transform.position - this.transform.position).normalized;
-        knockbackAmount = direction * knockbackForce;
-        rb2d.AddForce(knockbackAmount, ForceMode2D.Impulse);
+    void ApplyKnockback() {
+        if (rb2d == null) return;
+
+        Vector2 randomDir = new Vector2(Random.Range(-0.5f, 0.5f), 0.5f).normalized;
+        rb2d.AddForce(randomDir * knockbackForce, ForceMode2D.Impulse);
     }
 
     void DamageEffects() {
-        hurtParticle.Play();
+        if (hurtParticle != null) hurtParticle.Play();
     }
-
 }

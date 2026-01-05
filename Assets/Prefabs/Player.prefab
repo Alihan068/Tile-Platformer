@@ -9,17 +9,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4078712146779249403}
+  - component: {fileID: 4151512545724933072}
+  - component: {fileID: 5684817162218261127}
+  - component: {fileID: 7255852015602743274}
+  - component: {fileID: 4894971311555474185}
   - component: {fileID: 4299800584555100033}
   - component: {fileID: 120241894985269398}
   - component: {fileID: 2829781130757204865}
   - component: {fileID: 5362660462723429804}
-  - component: {fileID: 5684817162218261127}
   - component: {fileID: 5298064390323362114}
-  - component: {fileID: 8388008906172996048}
-  - component: {fileID: 7255852015602743274}
-  - component: {fileID: 4151512545724933072}
-  - component: {fileID: 4894971311555474185}
   - component: {fileID: 7115372078261176762}
+  - component: {fileID: 8388008906172996048}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -43,6 +43,66 @@ Transform:
   - {fileID: 8296771908667236033}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4151512545724933072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076289445970321003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d10b53e40a39a148a1e6e21b6de28cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlayer: 1
+  maxHealth: 100
+  damageReduction: 10
+  isAlive: 1
+  knockbackForce: 1
+  contactDamage: 10
+  deathKick: {x: 10, y: 10}
+  deathSpin: 20
+--- !u!114 &5684817162218261127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076289445970321003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45584c826e04ed41b670f856dd9de36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 10
+  jumpForce: 14
+  canMove: 1
+--- !u!114 &7255852015602743274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076289445970321003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6effa1518ce0f4e8c468806ae6a659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4894971311555474185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076289445970321003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff9defacda02fc41be9bc118d992623, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 10
 --- !u!212 &4299800584555100033
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -192,21 +252,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &5684817162218261127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5076289445970321003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e45584c826e04ed41b670f856dd9de36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  jumpForce: 14
-  canMove: 1
 --- !u!61 &5298064390323362114
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -253,6 +298,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.26, y: 0.37215292}
   m_EdgeRadius: 0
+--- !u!95 &7115372078261176762
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076289445970321003}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7b7cb04ceddbfc347b53616538dc4594, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!58 &8388008906172996048
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -289,74 +356,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 1, y: 0}
   m_Radius: 1.08
---- !u!114 &7255852015602743274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5076289445970321003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab6effa1518ce0f4e8c468806ae6a659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4151512545724933072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5076289445970321003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d10b53e40a39a148a1e6e21b6de28cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseArmor: 10
-  baseHealth: 100
-  isAlive: 1
-  isPlayer: 1
-  knockbackAmount: {x: 0, y: 0}
-  knockbackForce: 1
-  contactDamage: 10
-  deathKick: {x: 10, y: 10}
-  deathSpin: 20
---- !u!114 &4894971311555474185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5076289445970321003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ff9defacda02fc41be9bc118d992623, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 10
---- !u!95 &7115372078261176762
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5076289445970321003}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7b7cb04ceddbfc347b53616538dc4594, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8224995199131663801
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,13 +7,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float jumpForce = 5f;
 
-    //[SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
-    //[SerializeField] float deathSpin = 20f;
-
-    //public Vector2 checkpointPos = new Vector2 (0, 0);
-
-    Creature creature;
-
     Vector2 moveInput;
     Rigidbody2D rb2d;
     Animator animator;
@@ -21,18 +14,14 @@ public class PlayerController : MonoBehaviour {
     BoxCollider2D boxCollider2D;
 
     public bool canMove = true;
-    void Start() {
 
+    void Awake() {
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
-        //checkpointTransform = GetComponent<Transform>();
-
-
     }
 
-    // Update is called once per frame
     void FixedUpdate() {
         if (!canMove) return;
 
@@ -40,41 +29,37 @@ public class PlayerController : MonoBehaviour {
         FlipSprite();
     }
 
-
-    void OnMove(InputValue value) { //W-D (1;1)
+    void OnMove(InputValue value) {
         if (!canMove) return;
-
         moveInput = value.Get<Vector2>();
     }
 
     void Walk() {
-        if (!canMove) return;
-
         Vector2 playerVelocity = new Vector2(moveInput.x * moveSpeed, rb2d.linearVelocity.y);
         rb2d.linearVelocity = playerVelocity;
 
-        bool playerHasHorizntalSpeed = Mathf.Abs(rb2d.linearVelocity.x) > Mathf.Epsilon;
-        animator.SetBool("isWalking", playerHasHorizntalSpeed);
+        bool playerHasHorizontalSpeed = Mathf.Abs(rb2d.linearVelocity.x) > Mathf.Epsilon;
+        animator.SetBool("isWalking", playerHasHorizontalSpeed);
     }
-    void FlipSprite() {
 
-        bool playerHasHorizntalSpeed = Mathf.Abs(rb2d.linearVelocity.x) > Mathf.Epsilon;
-        if (playerHasHorizntalSpeed) {
-            transform.localScale =
-                new Vector2(Mathf.Sign(rb2d.linearVelocity.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+    void FlipSprite() {
+        bool playerHasHorizontalSpeed = Mathf.Abs(rb2d.linearVelocity.x) > Mathf.Epsilon;
+        if (playerHasHorizontalSpeed) {
+            transform.localScale = new Vector2(Mathf.Sign(rb2d.linearVelocity.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y);
         }
     }
 
     void OnJump(InputValue value) {
-        if (!boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"))) return;
+        if (!canMove || !boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"))) return;
 
-        if (value.isPressed) { //isPressed to detect any kind of change (from 0 to 1) for both button press and button release
-            rb2d.linearVelocity += new Vector2(0f, jumpForce);
+        if (value.isPressed) {
+            rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, jumpForce);
         }
     }
-
-
+    void OnAttack(InputValue value) {
+        if (!canMove) return;
+        if (value.isPressed) {
+            GetComponent<PlayerAttack>().AttackMethod();
+        }
+    }
 }
-
-
-
