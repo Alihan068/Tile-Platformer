@@ -20,13 +20,14 @@ public class Creature : MonoBehaviour {
 
     [HideInInspector] public bool isAlive = true;
 
-    [SerializeField] float knockbackForce = 5f;
+    [SerializeField] float knockbackForce = 10f;
     [SerializeField] float contactDamage = 10f;
 
     [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
     [SerializeField] float deathSpin = 20f;
 
-    Coroutine coroutine;
+    public bool IsKnockedBack { get; private set; }
+
     bool canTakeDamage = true;
 
     void Awake() {
@@ -41,19 +42,13 @@ public class Creature : MonoBehaviour {
         currentHealth = maxHealth;
     }
 
-    void FixedUpdate() {
-        if (isAlive) {
-            DetectHazardDamage();
-        }
-    }
-
-    public void TakeDamage(float amount) {
+    public void TakeDamage(float amount, Transform sourcePos) {
         if (!isAlive || !canTakeDamage) return;
 
-        StartCoroutine(ImmunityFrame());
+        ApplyKnockback(sourcePos);
+        StartCoroutine(DamageEffects());
 
         float finalDamage = CalculateFinalDamage(amount);
-
         currentHealth -= finalDamage;
 
         Debug.Log($"Damage Taken: {finalDamage}, Current HP: {currentHealth}");
@@ -61,44 +56,38 @@ public class Creature : MonoBehaviour {
         if (currentHealth <= 0) {
             Death();
         }
-        else {
-            ApplyKnockback();
-            DamageEffects();
-        }
     }
-    IEnumerator ImmunityFrame() {
+
+    IEnumerator DamageEffects() {
         canTakeDamage = false;
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = Color.white;
         yield return new WaitForSeconds(0.5f);
         canTakeDamage = true;
     }
 
-    void DetectHazardDamage() {
-        if (!isPlayer) return;
-
-        foreach (Collider2D col in colliders) {
-            if (col.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards"))) {
-                TakeDamage(contactDamage);
-                return;
-            }
-        }
+    float CalculateFinalDamage(float incomingDamageAmount) {
+        return Mathf.Max(0, incomingDamageAmount - (incomingDamageAmount / damageReduction));
     }
 
-    void Death() {
-        isAlive = false;
+    void ApplyKnockback(Transform sourcePos) {
+        if (rb2d == null) return;
 
-        if (isPlayer) {
-            PlayerController pc = GetComponent<PlayerController>();
-            if (pc != null) pc.canMove = false;
+        StopCoroutine(nameof(KnockbackRoutine));
+        StartCoroutine(KnockbackRoutine());
 
-            GameSession session = FindFirstObjectByType<GameSession>();
-            if (session != null) session.ProcessPlayerDeath();
+        rb2d.linearVelocity = Vector2.zero;
+        Vector2 direction = (transform.position - sourcePos.position).normalized;
+        Vector2 knockbackDirection = new Vector2(direction.x, 0.5f).normalized;
 
-            var camera = FindAnyObjectByType<CinemachineCamera>();
-            if (camera != null) camera.enabled = false;
-        }
+        rb2d.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+    }
 
-        if (animator != null) animator.SetTrigger("death");
-        DeathEffects();
+    IEnumerator KnockbackRoutine() {
+        IsKnockedBack = true;
+        yield return new WaitForSeconds(0.2f);
+        IsKnockedBack = false;
     }
 
     void DeathEffects() {
@@ -119,6 +108,25 @@ public class Creature : MonoBehaviour {
         Invoke(nameof(DestroyCreature), 5f);
     }
 
+    void Death() {
+        isAlive = false;
+
+        if (isPlayer) {
+            PlayerController pc = GetComponent<PlayerController>();
+            if (pc != null) pc.canMove = false;
+
+            GameSession session = FindFirstObjectByType<GameSession>();
+            if (session != null) session.ProcessPlayerDeath();
+
+            var camera = FindAnyObjectByType<CinemachineCamera>();
+            if (camera != null) camera.enabled = false;
+        }
+
+        if (animator != null) animator.SetTrigger("death");
+        DeathEffects();
+    }
+
+
     void ResetSpriteColor() {
         spriteRenderer.color = Color.white;
     }
@@ -129,20 +137,5 @@ public class Creature : MonoBehaviour {
 
     void DestroyCreature() {
         Destroy(gameObject);
-    }
-
-    float CalculateFinalDamage(float incomingDamageAmount) {
-        return Mathf.Max(0, incomingDamageAmount - (incomingDamageAmount / damageReduction));
-    }
-
-    void ApplyKnockback() {
-        if (rb2d == null) return;
-
-        Vector2 randomDir = new Vector2(Random.Range(-0.5f, 0.5f), 0.5f).normalized;
-        rb2d.AddForce(randomDir * knockbackForce, ForceMode2D.Impulse);
-    }
-
-    void DamageEffects() {
-        if (hurtParticle != null) hurtParticle.Play();
     }
 }
