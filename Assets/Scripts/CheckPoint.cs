@@ -22,6 +22,6 @@ public class CheckPoint : MonoBehaviour {
         if (!other.CompareTag("Player")) return;
 
         savedPosOfPlayer = checkpointTransformValues;
-        Debug.Log(" Checkpoint! = " + checkpointTransformValues);
+        //Debug.Log(" Checkpoint! = " + checkpointTransformValues);
     }
 }

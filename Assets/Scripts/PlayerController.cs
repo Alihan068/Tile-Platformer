@@ -12,18 +12,24 @@ public class PlayerController : MonoBehaviour {
     Animator animator;
     CapsuleCollider2D capsuleCollider2D;
     BoxCollider2D boxCollider2D;
+    Creature creature;
+
+    [SerializeField] LayerMask jumpables;
+    [SerializeField] int jumpCount;
 
     public bool canMove = true;
 
     void Awake() {
         rb2d = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
+        animator = GetComponentInChildren<Animator>();
+        capsuleCollider2D = GetComponentInChildren<CapsuleCollider2D>();
+        boxCollider2D = GetComponentInChildren<BoxCollider2D>();
+        creature = GetComponent<Creature>();
     }
 
     void FixedUpdate() {
         if (!canMove) return;
+        if (creature != null && creature.IsKnockedBack) return;
 
         Walk();
         FlipSprite();
@@ -50,7 +56,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnJump(InputValue value) {
-        if (!canMove || !boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"))) return;
+        if (!canMove || !boxCollider2D.IsTouchingLayers(jumpables)) return;
+        if (creature != null && creature.IsKnockedBack) return;
 
         if (value.isPressed) {
             rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, jumpForce);
@@ -58,6 +65,8 @@ public class PlayerController : MonoBehaviour {
     }
     void OnAttack(InputValue value) {
         if (!canMove) return;
+        if (creature != null && creature.IsKnockedBack) return;
+
         if (value.isPressed) {
             GetComponent<PlayerAttack>().AttackMethod();
         }

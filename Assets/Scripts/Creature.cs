@@ -20,7 +20,9 @@ public class Creature : MonoBehaviour {
 
     [HideInInspector] public bool isAlive = true;
 
-    [SerializeField] float knockbackForce = 10f;
+    [Header("Knockback Settings")]
+    [SerializeField] float baseKnockbackForce = 10f;
+    [SerializeField] float knockbackDamageMultiplier = 0.5f;
     [SerializeField] float contactDamage = 10f;
 
     [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
@@ -32,20 +34,20 @@ public class Creature : MonoBehaviour {
 
     void Awake() {
         rb2d = GetComponent<Rigidbody2D>();
-        hurtParticle = GetComponent<ParticleSystem>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        colliders = GetComponents<Collider2D>();
+        hurtParticle = GetComponentInChildren<ParticleSystem>();
+        animator = GetComponentInChildren<Animator>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        colliders = GetComponentsInChildren<Collider2D>();
     }
 
     void Start() {
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(float amount, Transform sourcePos) {
+    public void TakeDamage(float amount, Vector3 sourcePosition) {
         if (!isAlive || !canTakeDamage) return;
 
-        ApplyKnockback(sourcePos);
+        ApplyKnockback(amount, sourcePosition);
         StartCoroutine(DamageEffects());
 
         float finalDamage = CalculateFinalDamage(amount);
@@ -71,17 +73,20 @@ public class Creature : MonoBehaviour {
         return Mathf.Max(0, incomingDamageAmount - (incomingDamageAmount / damageReduction));
     }
 
-    void ApplyKnockback(Transform sourcePos) {
+    void ApplyKnockback(float damageAmount, Vector3 sourcePosition) {
         if (rb2d == null) return;
 
         StopCoroutine(nameof(KnockbackRoutine));
         StartCoroutine(KnockbackRoutine());
 
         rb2d.linearVelocity = Vector2.zero;
-        Vector2 direction = (transform.position - sourcePos.position).normalized;
+
+        Vector2 direction = (transform.position - sourcePosition).normalized;
         Vector2 knockbackDirection = new Vector2(direction.x, 0.5f).normalized;
 
-        rb2d.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+        float totalKnockback = baseKnockbackForce + (damageAmount * knockbackDamageMultiplier);
+
+        rb2d.AddForce(knockbackDirection * totalKnockback, ForceMode2D.Impulse);
     }
 
     IEnumerator KnockbackRoutine() {
@@ -125,7 +130,6 @@ public class Creature : MonoBehaviour {
         if (animator != null) animator.SetTrigger("death");
         DeathEffects();
     }
-
 
     void ResetSpriteColor() {
         spriteRenderer.color = Color.white;

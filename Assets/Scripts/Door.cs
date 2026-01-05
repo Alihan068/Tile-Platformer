@@ -9,7 +9,8 @@ public class Door : MonoBehaviour {
 
     void Start() {
         edgeCollider = GetComponent<EdgeCollider2D>();
-
+        closeDoorSprite.enabled = true;
+        openDoorSprite.enabled = false;
     }
 
     // Update is called once per frame
@@ -21,11 +22,11 @@ public class Door : MonoBehaviour {
         playerHasKey = true;
         Debug.Log("Key Acquired");
     }
-    void OpenDoor(bool open) {
+    void OpenDoor(bool door) {
         Debug.Log("Open Door!");
-        edgeCollider.enabled = !open;
-        closeDoorSprite.enabled = !open;
-        openDoorSprite.enabled = open;
+        edgeCollider.enabled = !door;
+        closeDoorSprite.enabled = !door;
+        openDoorSprite.enabled = door;
         playerHasKey = false;
 
     }
